@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search for Player</title>
+</head>
+<body>
+<link rel="stylesheet" href="new_project.css">
+  <link rel="stylesheet" href="https://ruyadorno.github.io/simple-slider/simple-slider.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-slider/1.0.0/simpleslider.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/SpeechKITT/0.3.0/speechkitt.min.js"></script>
+  <script src="slider.js"></script>
+  <script src="script.js"></script>
+  <script src="backend/player.js"></script>
+
+</head>
+<body class="main-body">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <h1 class="navbar-title">NBA Stats Hub</h1>
+      <div class="navbar-links">
+        <a href="home.html" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="teams.html" class="nav-link">NBA Teams</a>
+        <a href="player.html" class="nav-link">Search Player</a>
+        <a href="ranking.html" class="nav-link">Rankings</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <section>
+      <h2 class="section-title">Search for a current NBA player to find his stats...</h2>
+    </section>
+
+    <input type="text" id="searchInput" placeholder="Enter player name"/>
+    <button onclick="searchPlayer()">Search</button>
+  
+    <div id="player-info"></div>
+
+
+  </main>
+  <footer class="footer">
+    <p>© 2025 NBA Stats Hub. Powered by <a href="https://www.balldontlie.io/" class="footer-link" target="_blank">Ball Don't Lie API</a>.</p>
+  </footer>
+</body>
+
+</body>
+</html>
