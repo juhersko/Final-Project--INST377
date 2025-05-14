@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NBA Stats Hub - Home</title>
+  <link rel="stylesheet" href="new_project.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/SpeechKITT/0.3.0/speechkitt.min.js"></script>
+</head>
+<body class="main-body">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <h1 class="navbar-title">NBA Stats Hub</h1>
+      <div class="navbar-links">
+        <a href="home.html" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="teams.html" class="nav-link">NBA Teams</a>
+        <a href="player.html" class="nav-link">Search Player</a>
+        <a href="ranking.html" class="nav-link">Rankings</a>
+        <a href="airport.html " class="nav-link"> Catch A Game!</a>
+      </div>
+      <style>
+        .player-info {
+          font-family: Arial, sans-serif;
+          margin: 20px;
+          padding: 10px;
+          border: 1px solid #ddd;
+          width: 300px;
+        }
+        .player-info h2 {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
+        .player-info p {
+          font-size: 18px;
+        }
+      </style>
+    </head>
+    <body>
+      <div id="player-info" class="player-info">
+        <h2>Player of the Week</h2>
+        <p id="player-name"></p>
+        <p id="player-team"></p>
+        <p id="player-jersey"></p>
+        <p id="player-points"></p>
+      </div>
+    </div>
+
+<script> 
+    
+    const API_KEY = "d229cab2-5da9-4342-8673-8e5307f88801";
+
+async function fetchPlayerOfTheWeek() {
+  // Define the API endpoint to fetch stats
+  const url = 'https://api.balldontlie.io/v1/stats';
+  
+  try {
+    // Fetch stats data from the API
+    const response = await fetch(url, {
+      headers: { 'Authorization': API_KEY }
+    });
+
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    
+    // Parse the data
+    const data = await response.json();
+    console.log("Response:", data);
+
+    // Check if we have any data
+    if (!data.data || data.data.length === 0) {
+      console.log("No stats found for the week.");
+      return;
+    }
+
+    // Find the player with the most points
+    const playerOfTheWeek = data.data.reduce((prev, current) => {
+      return (prev.pts > current.pts) ? prev : current;
+    });
+
+    // Extract relevant player details
+    const player = playerOfTheWeek.player;
+    const team = playerOfTheWeek.team;
+
+    const playerInfo = {
+      name: `${player.first_name} ${player.last_name}`,
+      jersey: player.jersey_number,
+      team: team.full_name,
+      points: playerOfTheWeek.pts,
+    };
+
+    console.log("Player of the Week:", playerInfo);
+
+    // Display player info
+    displayPlayerInfo(playerInfo);
+
+  } catch (error) {
+    console.error("Error fetching player stats:", error);
+  }
+}
+
+// Function to display player information
+function displayPlayerInfo(playerInfo) {
+  const resultDiv = document.getElementById('player-info');
+  
+  if (resultDiv) {
+    resultDiv.innerHTML = `
+      <h2>Player of the Week</h2>
+      <p><strong>Name:</strong> ${playerInfo.name}</p>
+      <p><strong>Jersey Number:</strong> ${playerInfo.jersey}</p>
+      <p><strong>Team:</strong> ${playerInfo.team}</p>
+      <p><strong>Points Scored:</strong> ${playerInfo.points}</p>
+    `;
+  } else {
+    console.error("Player info display element not found.");
+  }
+}
+
+// Call the function when needed
+fetchPlayerOfTheWeek();
+
+
+<script/>
