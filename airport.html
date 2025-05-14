@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NBA Stats Hub - Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="new_project.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/SpeechKITT/0.3.0/speechkitt.min.js"></script>
+  <script src="script.js" defer></script> 
+</head>
+<body class="main-body">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <h1 class="navbar-title">NBA Stats Hub</h1>
+      <div class="navbar-links">
+        <a href="home.html" class="nav-link">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="teams.html" class="nav-link">NBA Teams</a>
+        <a href="player.html" class="nav-link">Search Player</a>
+        <a href="ranking.html" class="nav-link">Rankings</a>
+        <a href="airport.html " class="nav-link"> Catch A Game!</a>
+      </div>
+    </div>
+    <div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  // Initialize Leaflet map centered over the USA
+  const map = L.map('map').setView([39.8283, -98.5795], 4);
+
+  // Add OpenStreetMap tiles
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 10,
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Convert DMS (degrees-minutes-seconds) to decimal degrees
+  function dmsToDecimal(dms) {
+    const match = dms.match(/(\d+)-(\d+)-([\d.]+)([NSEW])/);
+    if (!match) return null;
+    const [_, degrees, minutes, seconds, direction] = match;
+    let decimal = parseInt(degrees) + parseInt(minutes) / 60 + parseFloat(seconds) / 3600;
+    if (direction === 'S' || direction === 'W') decimal *= -1;
+    return decimal;
+  }
+
+  // Fetch airport data and place markers
+  fetch('https://api.aviationapi.com/v1/airports')
+    .then(res => res.json())
+    .then(data => {
+      Object.values(data).forEach(airport => {
+        const { facility_name, city, state, latitude, longitude } = airport;
+
+        if (latitude && longitude && facility_name && city && state) {
+          const lat = dmsToDecimal(latitude);
+          const lon = dmsToDecimal(longitude);
+
+          if (lat !== null && lon !== null) {
+            L.marker([lat, lon]).addTo(map)
+              .bindPopup(`<strong>${facility_name}</strong><br>${city}, ${state}`);
+          }
+        }
+      });
+    })
+    .catch(err => {
+      console.error('Failed to load airport data:', err);
+    });
+</script>
+
+</body>
+</html>
